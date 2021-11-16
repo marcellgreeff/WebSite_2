@@ -17,7 +17,7 @@
             <asp:Label ID="Label2" runat="server" Text="Search photo by:"></asp:Label>
 &nbsp;&nbsp;&nbsp;
             <asp:DropDownList ID="ddSearchBy1" runat="server">
-                <asp:ListItem>Owner</asp:ListItem>
+                <asp:ListItem>UserUpload</asp:ListItem>
                 <asp:ListItem>Location</asp:ListItem>
                 <asp:ListItem>Type</asp:ListItem>
             </asp:DropDownList>

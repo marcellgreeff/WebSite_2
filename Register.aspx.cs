@@ -6,6 +6,8 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Data;
 using System.Data.SqlClient;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace WebSite_2
 {
@@ -27,8 +29,12 @@ namespace WebSite_2
                      System.Data.SqlClient.SqlConnection sqlCon = new System.Data.SqlClient.SqlConnection(@"Data Source = (LocalDB)\MSSQLLocalDB; AttachDbFilename = |DataDirectory|\Database.mdf; Integrated Security = True");
                      System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand();
                      cmd.CommandType = System.Data.CommandType.Text;
-                     cmd.CommandText = "INSERT [User] (UserId, Password, Question, Answer) VALUES ('" + txtId.Text + "', '" + txtPassword.Text + "', '" + ddlQuestion.SelectedValue + "', '" + txtAnswer.Text + "')";
-                     cmd.Connection = sqlCon;
+                    string pwd = txtPassword.Text;
+                    string salt = Register.GenerateSalt(70);
+                    string pwdHashed = Register.HashPassword(pwd, salt, 10101, 70);
+
+                    cmd.CommandText = "INSERT [User] (UserId, Password, Question, Answer) VALUES ('" + txtId.Text + "', '" + pwdHashed + "', '" + ddlQuestion.SelectedItem + "', '" + txtAnswer.Text + "')";
+                    cmd.Connection = sqlCon;
 
                      sqlCon.Open();
                      cmd.ExecuteNonQuery();
@@ -56,6 +62,29 @@ namespace WebSite_2
         {
             Response.Redirect("Login.aspx");
 
+        }
+
+
+        public static string GenerateSalt(int nSalt)
+        {
+            var saltBytes = new byte[nSalt];
+
+            using (var provider = new RNGCryptoServiceProvider())
+            {
+                provider.GetNonZeroBytes(saltBytes);
+            }
+
+            return Convert.ToBase64String(saltBytes);
+        }
+
+        public static string HashPassword(string password, string salt, int nIterations, int nHash)
+        {
+            var saltBytes = Convert.FromBase64String(salt);
+
+            using (var rfc2898DeriveBytes = new Rfc2898DeriveBytes(password, saltBytes, nIterations))
+            {
+                return Convert.ToBase64String(rfc2898DeriveBytes.GetBytes(nHash));
+            }
         }
     }
 }

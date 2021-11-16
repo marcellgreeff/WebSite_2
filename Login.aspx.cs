@@ -5,7 +5,9 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Data;
+using System.IO;
 using System.Data.SqlClient;
+using System.Security.Cryptography;
 
 namespace WebSite_2
 {
@@ -29,6 +31,10 @@ namespace WebSite_2
         {
 
             con.Open();
+            string pwd = txtPassword.Text;
+            string salt = Register.GenerateSalt(70);
+            string pwdHashed = Register.HashPassword(pwd, salt, 10101, 70);
+
             string sql = @"SELECT UserId, Password FROM [User] WHERE UserId = @UserId";
             SqlCommand command = new SqlCommand(sql, con);
             command.Parameters.AddWithValue("@UserId", txtId.Text);
@@ -72,6 +78,28 @@ namespace WebSite_2
         protected void btnRegister_Click(object sender, EventArgs e)
         {
             Response.Redirect("Register.aspx");
+        }
+
+        public static string GenerateSalt(int nSalt)
+        {
+            var saltBytes = new byte[nSalt];
+
+            using (var provider = new RNGCryptoServiceProvider())
+            {
+                provider.GetNonZeroBytes(saltBytes);
+            }
+
+            return Convert.ToBase64String(saltBytes);
+        }
+
+        public static string HashPassword(string password, string salt, int nIterations, int nHash)
+        {
+            var saltBytes = Convert.FromBase64String(salt);
+
+            using (var rfc2898DeriveBytes = new Rfc2898DeriveBytes(password, saltBytes, nIterations))
+            {
+                return Convert.ToBase64String(rfc2898DeriveBytes.GetBytes(nHash));
+            }
         }
     }
 }
