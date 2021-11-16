@@ -11,13 +11,7 @@
         <div>
             <asp:LinkButton ID="lbBack" runat="server" OnClick="lbBack_Click">Back</asp:LinkButton>
             <br />
-            <asp:Label ID="Label1" runat="server" Text="Upload /Remove"></asp:Label>
-            <br />
-            <br />
-            <asp:DropDownList ID="ddOptions" runat="server">
-                <asp:ListItem>Upload</asp:ListItem>
-                <asp:ListItem>Download</asp:ListItem>
-            </asp:DropDownList>
+            <asp:Label ID="Label1" runat="server" Text="Upload/Download"></asp:Label>
             <br />
             <br />
             <asp:FileUpload ID="FileUpload1" runat="server" />
@@ -54,8 +48,6 @@
                             <asp:LinkButton ID="lbDownload" runat="server" CommandArgument='<%# Eval("File") %>' CommandName="Download" Text='<%# Eval("File") %>'></asp:LinkButton>
                         </ItemTemplate>
                     </asp:TemplateField>
-                    <asp:BoundField HeaderText="Location" />
-                    <asp:BoundField HeaderText="Type" />
                 </Columns>
             </asp:GridView>
             <br />
@@ -63,10 +55,6 @@
             <br />
             <br />
         </div>
-        <p>
-            &nbsp;</p>
-        <p>
-            &nbsp;</p>
         <p>
             &nbsp;</p>
     </form>

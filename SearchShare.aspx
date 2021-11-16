@@ -38,15 +38,15 @@
             <asp:Image ID="imgOutput" runat="server" Height="109px" Width="155px" />
             <br />
             <br />
-            <asp:Label ID="Label3" runat="server" Text="If you would like to share this image, please enter the Id of the person to share with and click share."></asp:Label>
+            <asp:Label ID="Label3" runat="server" Text="If you would like to share this image, please select the Id of the person to share with and click share."></asp:Label>
             <br />
             <br />
-            <asp:TextBox ID="txtId" runat="server"></asp:TextBox>
+            <asp:DropDownList ID="ddShare" runat="server">
+            </asp:DropDownList>
             <br />
             <br />
             <asp:Button ID="btnShare" runat="server" OnClick="btnShare_Click" Text="Share" />
         </div>
-        <asp:Label ID="lbltest" runat="server" Text="Label"></asp:Label>
     </form>
 </body>
 </html>

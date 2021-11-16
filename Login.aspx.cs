@@ -8,6 +8,7 @@ using System.Data;
 using System.IO;
 using System.Data.SqlClient;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace WebSite_2
 {
@@ -15,7 +16,6 @@ namespace WebSite_2
     {
         static string sCon = @"Data Source = (LocalDB)\MSSQLLocalDB; AttachDbFilename = |DataDirectory|\Database.mdf; Integrated Security = True";
         SqlConnection con = new SqlConnection(sCon);
-        public static string ID;
         protected void Page_Load(object sender, EventArgs e)
         {
             txtId.Attributes.Add("autocomplete", "off");
@@ -34,6 +34,8 @@ namespace WebSite_2
             string pwd = txtPassword.Text;
             string salt = Register.GenerateSalt(70);
             string pwdHashed = Register.HashPassword(pwd, salt, 10101, 70);
+            string password = Hascode(txtPassword.Text);
+            Session["Id"] = txtId.Text;
 
             string sql = @"SELECT UserId, Password FROM [User] WHERE UserId = @UserId";
             SqlCommand command = new SqlCommand(sql, con);
@@ -44,7 +46,7 @@ namespace WebSite_2
             {
                 if (datareader.HasRows)
                 {
-                    if (datareader["UserId"].ToString() == txtId.Text && datareader["Password"].ToString() == txtPassword.Text)
+                    if (datareader["UserId"].ToString() == txtId.Text && datareader["Password"].ToString() == password)
                     {
                         txtId.Text = "";
                         txtPassword.Text = "";
@@ -100,6 +102,14 @@ namespace WebSite_2
             {
                 return Convert.ToBase64String(rfc2898DeriveBytes.GetBytes(nHash));
             }
+        }
+
+        public static string Hascode(string value)
+        {
+            return Convert.ToBase64String(
+                System.Security.Cryptography.SHA256.Create()
+                .ComputeHash(Encoding.UTF8.GetBytes(value))
+                );
         }
     }
 }

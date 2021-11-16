@@ -16,6 +16,20 @@ namespace WebSite_2
         {
             txtDate.Attributes.Add("autocomplete", "off");
             txtLocation.Attributes.Add("autocomplete", "off");
+
+            DataTable dt = new DataTable();
+            dt.Columns.Add("File", typeof(string));
+
+
+            foreach (string strFile in Directory.GetFiles(Server.MapPath("~/App_Data/ImageData/")))
+            {
+                FileInfo fi = new FileInfo(strFile);
+                dt.Rows.Add(fi.Name);
+            }
+
+            gvDelete.DataSource = dt;
+            gvDelete.DataBind();
+
         }
 
         protected void lbBack_Click(object sender, EventArgs e)
@@ -33,7 +47,7 @@ namespace WebSite_2
                     System.Data.SqlClient.SqlConnection sqlCon = new System.Data.SqlClient.SqlConnection(@"Data Source = (LocalDB)\MSSQLLocalDB; AttachDbFilename = |DataDirectory|\Database.mdf; Integrated Security = True");
                     System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand();
                     cmd.CommandType = System.Data.CommandType.Text;
-                    cmd.CommandText = "INSERT [Image] (Name, Location, UserUpload, Type, Date) VALUES ('" + FileUpload1.FileName + "', '" + txtLocation.Text + "', '" + Login.ID + "', '" + ddType.SelectedValue + "', '" + txtDate.Text + "')";
+                    cmd.CommandText = "INSERT [Image] (Name, Location, UserUpload, Type, Date) VALUES ('" + FileUpload1.FileName + "', '" + txtLocation.Text + "', '" + Session["Id"].ToString() + "', '" + ddType.SelectedValue + "', '" + txtDate.Text + "')";
                     cmd.Connection = sqlCon;
                     
                     sqlCon.Open();
@@ -57,18 +71,15 @@ namespace WebSite_2
 
             DataTable dt = new DataTable();
             dt.Columns.Add("File", typeof(string));
-            dt.Columns.Add("Location", typeof(string));
-            dt.Columns.Add("Type", typeof(string));
 
             foreach (string strFile in Directory.GetFiles(Server.MapPath("~/App_Data/ImageData/")))
             {
                 FileInfo fi = new FileInfo(strFile);
-                dt.Rows.Add(fi.Name, fi.Length, fi.Extension);
+                dt.Rows.Add(fi.Name);
             }
 
             gvDelete.DataSource = dt;
             gvDelete.DataBind();
-
 
         }
 

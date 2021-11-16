@@ -32,8 +32,9 @@ namespace WebSite_2
                     string pwd = txtPassword.Text;
                     string salt = Register.GenerateSalt(70);
                     string pwdHashed = Register.HashPassword(pwd, salt, 10101, 70);
+                    string password = Hascode(txtPassword.Text);
 
-                    cmd.CommandText = "INSERT [User] (UserId, Password, Question, Answer) VALUES ('" + txtId.Text + "', '" + pwdHashed + "', '" + ddlQuestion.SelectedItem + "', '" + txtAnswer.Text + "')";
+                    cmd.CommandText = "INSERT [User] (UserId, Password, Question, Answer) VALUES ('" + txtId.Text + "', '" + password + "', '" + ddlQuestion.SelectedItem + "', '" + txtAnswer.Text + "')";
                     cmd.Connection = sqlCon;
 
                      sqlCon.Open();
@@ -86,5 +87,13 @@ namespace WebSite_2
                 return Convert.ToBase64String(rfc2898DeriveBytes.GetBytes(nHash));
             }
         }
+        public static string Hascode(string value)
+        {
+            return Convert.ToBase64String(
+                System.Security.Cryptography.SHA256.Create()
+                .ComputeHash(Encoding.UTF8.GetBytes(value))
+                );
+        }
+
     }
 }

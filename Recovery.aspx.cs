@@ -7,6 +7,7 @@ using System.Web.UI.WebControls;
 using System.Data;
 using System.Data.Sql;
 using System.Data.SqlClient;
+using System.Security.Cryptography;
 
 namespace WebSite_2
 {
@@ -78,12 +79,16 @@ namespace WebSite_2
                 cmd.Connection.Close();
                 if (txtPassword.Text == txtConfirmPassword.Text)
                 {
-                   using (SqlConnection conn = new SqlConnection(constr))
+
+                    string pwd = txtPassword.Text;
+                    string salt = Register.GenerateSalt(70);
+                    string pwdHashed = Register.HashPassword(pwd, salt, 10101, 70);
+                    using (SqlConnection conn = new SqlConnection(constr))
                         {
                             conn.Open();
-                            using (SqlCommand cmd1 = new SqlCommand("UPDATE [User] SET Password = '" + txtPassword.Text + "' WHERE UserId = '" + txtId.Text + "'", conn))
+                            using (SqlCommand cmd1 = new SqlCommand("UPDATE [User] SET Password = '" + pwdHashed + "' WHERE UserId = '" + txtId.Text + "'", conn))
                             {
-                                cmd1.Parameters.AddWithValue("@Password", txtPassword.Text.ToString());
+                                cmd1.Parameters.AddWithValue("@Password", pwdHashed);
                                 int rows = cmd1.ExecuteNonQuery();
                                 lblOutput.Text = "Password has been changed successfully!";
                                 txtId.Text = "";
@@ -101,6 +106,28 @@ namespace WebSite_2
                         conn.Close();
                         }
                 }
+            }
+        }
+
+        public static string GenerateSalt(int nSalt)
+        {
+            var saltBytes = new byte[nSalt];
+
+            using (var provider = new RNGCryptoServiceProvider())
+            {
+                provider.GetNonZeroBytes(saltBytes);
+            }
+
+            return Convert.ToBase64String(saltBytes);
+        }
+
+        public static string HashPassword(string password, string salt, int nIterations, int nHash)
+        {
+            var saltBytes = Convert.FromBase64String(salt);
+
+            using (var rfc2898DeriveBytes = new Rfc2898DeriveBytes(password, saltBytes, nIterations))
+            {
+                return Convert.ToBase64String(rfc2898DeriveBytes.GetBytes(nHash));
             }
         }
     }

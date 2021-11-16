@@ -114,13 +114,13 @@ namespace WebSite_2
         protected global::System.Web.UI.WebControls.Label Label3;
 
         /// <summary>
-        /// txtId control.
+        /// ddShare control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtId;
+        protected global::System.Web.UI.WebControls.DropDownList ddShare;
 
         /// <summary>
         /// btnShare control.
@@ -130,14 +130,5 @@ namespace WebSite_2
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button btnShare;
-
-        /// <summary>
-        /// lbltest control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbltest;
     }
 }
