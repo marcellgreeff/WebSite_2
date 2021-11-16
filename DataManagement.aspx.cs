@@ -46,7 +46,7 @@ namespace WebSite_2
                 SqlCommand cmd = new SqlCommand("SELECT Id FROM [Image] WHERE Id = '" + txtImageId.Text + "'", new SqlConnection(constr));
                 cmd.Connection.Open();
                 password = cmd.ExecuteScalar().ToString();
-                if (password != "" && txtImageId.Text !="")
+                if (password != "" && txtImageId.Text != "")
                 {
                     lblOutput.Text = "Data found! Choose to update or delete data!";
 
@@ -68,7 +68,50 @@ namespace WebSite_2
 
         protected void btnUpdate_Click(object sender, EventArgs e)
         {
+            SqlCommand cmd = new SqlCommand("SELECT Id FROM [Image] WHERE Id = '" + txtImageId.Text + "'", new SqlConnection(constr));
+            cmd.Connection.Open();
+            if (txtImageId.Text == cmd.ExecuteScalar().ToString())
+            {
+                cmd.Connection.Close();
+                using (SqlConnection conn = new SqlConnection(constr))
+                {
+                    conn.Open();
+                    using (SqlCommand cmd1 = new SqlCommand("UPDATE [Image] SET Location = '" + txtLocation.Text + "', Type = '" + txtType.Text + "' WHERE Id = '" + txtImageId.Text + "'", conn))
+                    {
+                        cmd1.Parameters.AddWithValue("@Location", txtLocation.Text.ToString());
+                        cmd1.Parameters.AddWithValue("@Type", txtType.Text.ToString());
+                        int rows = cmd1.ExecuteNonQuery();
+                        lblOutput.Text = "Data has been updated successfully!";
+                        txtImageId.Text = "";
+                        txtLocation.Text = "";
+                        txtType.Text = "";
+                        Label3.Visible = false;
+                        Label4.Visible = false;
+                        txtLocation.Visible = false;
+                        txtType.Visible = false;
+                        btnDelete.Visible = false;
+                        btnUpdate.Visible = false;
+                    }
+                    conn.Close();
+                }
+            }
+        }
 
+        protected void btnDelete_Click(object sender, EventArgs e)
+        {
+            SqlCommand cmd = new SqlCommand("DELETE FROM [Image] WHERE Id = '" + txtImageId.Text + "'", new SqlConnection(constr));
+            cmd.Connection.Open();
+            cmd.ExecuteNonQuery();
+            lblOutput.Text = "Data has been updated successfully!";
+            txtImageId.Text = "";
+            txtLocation.Text = "";
+            txtType.Text = "";
+            Label3.Visible = false;
+            Label4.Visible = false;
+            txtLocation.Visible = false;
+            txtType.Visible = false;
+            btnDelete.Visible = false;
+            btnUpdate.Visible = false;
         }
     }
 }

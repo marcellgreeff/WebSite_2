@@ -19,7 +19,7 @@
 &nbsp;&nbsp;&nbsp;
             <asp:TextBox ID="txtImageId" runat="server"></asp:TextBox>
 &nbsp;&nbsp;&nbsp;
-            <asp:Button ID="btnDelete" runat="server" Text="Delete Image and Data" />
+            <asp:Button ID="btnDelete" runat="server" OnClick="btnDelete_Click" Text="Delete Image and Data" />
             <br />
             <br />
             <asp:Button ID="btnSearch" runat="server" OnClick="btnSearch_Click" Text="Search Image" />
