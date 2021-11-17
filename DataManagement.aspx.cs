@@ -45,7 +45,7 @@ namespace WebSite_2
         {
             if (txtImageId.Text != "")
             {
-                SqlCommand cmd = new SqlCommand("SELECT Id FROM [Image] WHERE Id = '" + txtImageId.Text + "'", new SqlConnection(constr));
+                SqlCommand cmd = new SqlCommand("SELECT Image.Id FROM [Image] INNER JOIN [Access] on Access.ImageId = Image.Id WHERE Image.Id = '" + txtImageId.Text + "' AND Access.UserId = '" + Session["Id"] + "'", new SqlConnection(constr));
                 cmd.Connection.Open();
                 password = cmd.ExecuteScalar().ToString();
                 if (password != "" && txtImageId.Text != "")
