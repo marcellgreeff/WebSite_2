@@ -26,14 +26,15 @@ namespace WebSite_2
             {
                     if (ddlQuestion.SelectedIndex > -1)                                        
                         {
-                     System.Data.SqlClient.SqlConnection sqlCon = new System.Data.SqlClient.SqlConnection(@"Data Source = (LocalDB)\MSSQLLocalDB; AttachDbFilename = |DataDirectory|\Database.mdf; Integrated Security = True");
-                     System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand();
-                     cmd.CommandType = System.Data.CommandType.Text;
+                     
                     string pwd = txtPassword.Text;
                     string salt = Register.GenerateSalt(70);
                     string pwdHashed = Register.HashPassword(pwd, salt, 10101, 70);
                     string password = Hascode(txtPassword.Text);
 
+                    System.Data.SqlClient.SqlConnection sqlCon = new System.Data.SqlClient.SqlConnection(@"Data Source = (LocalDB)\MSSQLLocalDB; AttachDbFilename = |DataDirectory|\Database.mdf; Integrated Security = True");
+                    System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand();
+                    cmd.CommandType = System.Data.CommandType.Text;
                     cmd.CommandText = "INSERT [User] (UserId, Password, Question, Answer) VALUES ('" + txtId.Text + "', '" + password + "', '" + ddlQuestion.SelectedItem + "', '" + txtAnswer.Text + "')";
                     cmd.Connection = sqlCon;
 

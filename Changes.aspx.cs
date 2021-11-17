@@ -6,6 +6,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.IO;
 using System.Data;
+using System.Data.SqlClient;
 
 namespace WebSite_2
 {
@@ -44,14 +45,26 @@ namespace WebSite_2
                 if (ddType.SelectedIndex > -1)
                 {
                     FileUpload1.PostedFile.SaveAs(Server.MapPath("~/App_Data/ImageData/") + FileUpload1.FileName);
-                    System.Data.SqlClient.SqlConnection sqlCon = new System.Data.SqlClient.SqlConnection(@"Data Source = (LocalDB)\MSSQLLocalDB; AttachDbFilename = |DataDirectory|\Database.mdf; Integrated Security = True");
-                    System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand();
-                    cmd.CommandType = System.Data.CommandType.Text;
+                    SqlConnection sqlCon = new SqlConnection(@"Data Source = (LocalDB)\MSSQLLocalDB; AttachDbFilename = |DataDirectory|\Database.mdf; Integrated Security = True");
+                    SqlCommand cmd = new SqlCommand();
+                    cmd.CommandType = CommandType.Text;
                     cmd.CommandText = "INSERT [Image] (Name, Location, UserUpload, Type, Date) VALUES ('" + FileUpload1.FileName + "', '" + txtLocation.Text + "', '" + Session["Id"].ToString() + "', '" + ddType.SelectedValue + "', '" + txtDate.Text + "')";
                     cmd.Connection = sqlCon;
-                    
                     sqlCon.Open();
                     cmd.ExecuteNonQuery();
+
+                    SqlCommand cmdimage = new SqlCommand("SELECT Id FROM [Image] WHERE Name = '" + FileUpload1.FileName + "';", new SqlConnection(@"Data Source = (LocalDB)\MSSQLLocalDB; AttachDbFilename = |DataDirectory|\Database.mdf; Integrated Security = True"));
+                    cmdimage.Connection.Open();
+                    string imageId = cmdimage.ExecuteScalar().ToString();
+                    cmdimage.Connection.Close();
+
+                    SqlCommand cmdAccess = new SqlCommand();
+                    cmdAccess.CommandType = CommandType.Text;
+                    cmdAccess.CommandText = "INSERT [Access] (UserId, ImageId) VALUES ('" + Session["Id"].ToString() + "', '" + imageId + "')";
+                    cmdAccess.Connection = sqlCon;
+
+                    
+                    cmdAccess.ExecuteNonQuery();
                     sqlCon.Close();
 
                     lblMessage.Text = "Image Uploaded!";

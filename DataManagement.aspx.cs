@@ -20,6 +20,8 @@ namespace WebSite_2
         public DataTable dt;
         public SqlDataReader dbReader;
         public string constr = @"Data Source = (LocalDB)\MSSQLLocalDB; AttachDbFilename = |DataDirectory|\Database.mdf; Integrated Security = True";
+        static readonly string rootFolder = @"C:/Users/marce/source/repos/WebSite_2/App_Data/ImageData";
+        string authorsFile = "";
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -99,9 +101,24 @@ namespace WebSite_2
 
         protected void btnDelete_Click(object sender, EventArgs e)
         {
+            SqlCommand cmdAccess = new SqlCommand("DELETE FROM [Access] WHERE ImageId = '" + txtImageId.Text + "'", new SqlConnection(constr));
+            SqlCommand cmdName = new SqlCommand("SELECT Name FROM [Image] WHERE Id = '" + txtImageId.Text + "'", new SqlConnection(constr));
             SqlCommand cmd = new SqlCommand("DELETE FROM [Image] WHERE Id = '" + txtImageId.Text + "'", new SqlConnection(constr));
+            cmdName.Connection.Open();
+            cmdName.ExecuteNonQuery();
+            authorsFile = cmdName.ExecuteScalar().ToString();
+            cmdName.Connection.Close();
             cmd.Connection.Open();
             cmd.ExecuteNonQuery();
+            cmd.Connection.Close();
+            cmdAccess.Connection.Open();
+            cmdAccess.ExecuteNonQuery();
+            cmdAccess.Connection.Close();
+            if (File.Exists(Path.Combine(rootFolder, authorsFile)))
+            {
+                // If file found, delete it    
+                File.Delete(Path.Combine(rootFolder, authorsFile));
+            }
             lblOutput.Text = "Data has been updated successfully!";
             txtImageId.Text = "";
             txtLocation.Text = "";

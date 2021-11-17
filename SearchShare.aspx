@@ -30,7 +30,7 @@
             <br />
             <asp:Button ID="btnSearchBy" runat="server" Text="Search" OnClick="btnSearchBy_Click" />
             &nbsp;&nbsp;&nbsp;
-            <asp:DropDownList ID="ddImages" runat="server">
+            <asp:DropDownList ID="ddImages" runat="server" OnTextChanged="ddImages_TextChanged">
             </asp:DropDownList>
             &nbsp;
             <br />
@@ -38,7 +38,7 @@
             <asp:Image ID="imgOutput" runat="server" Height="109px" Width="155px" />
             <br />
             <br />
-            <asp:Label ID="Label3" runat="server" Text="If you would like to share this image, please select the Id of the person to share with and click share."></asp:Label>
+            <asp:Label ID="Label3" runat="server" Text="If you would like to share/unshare this image, please select the Id of the person to share/unshare with and click share."></asp:Label>
             <br />
             <br />
             <asp:DropDownList ID="ddShare" runat="server">
@@ -46,6 +46,11 @@
             <br />
             <br />
             <asp:Button ID="btnShare" runat="server" OnClick="btnShare_Click" Text="Share" />
+            &nbsp;&nbsp;&nbsp;
+            <asp:Button ID="btnUnshare" runat="server" OnClick="btnUnshare_Click" Text="Unshare" />
+            <br />
+            <br />
+            <asp:Label ID="lblOutput" runat="server"></asp:Label>
         </div>
     </form>
 </body>
