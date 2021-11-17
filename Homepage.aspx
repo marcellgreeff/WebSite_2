@@ -12,7 +12,8 @@
             <Items>
                 <asp:MenuItem NavigateUrl="~/Changes.aspx" Text="Upload/Download" Value="Upload/Download"></asp:MenuItem>
                 <asp:MenuItem NavigateUrl="~/SearchShare.aspx" Text="Search/Share" Value="Search/Share"></asp:MenuItem>
-                <asp:MenuItem NavigateUrl="DataManagement.aspx" Text="DataManagement" Value="DataManagement"></asp:MenuItem>
+                <asp:MenuItem NavigateUrl="DataManagement.aspx" Text="Data Management" Value="Data Management"></asp:MenuItem>
+                <asp:MenuItem NavigateUrl="AlbumManagement.aspx" Text="Album Management" Value="Album Management"></asp:MenuItem>
                 <asp:MenuItem NavigateUrl="~/Login.aspx" Text="Log Out" Value="Log Out"></asp:MenuItem>
             </Items>
         </asp:Menu>

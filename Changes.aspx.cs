@@ -31,6 +31,21 @@ namespace WebSite_2
             gvDelete.DataSource = dt;
             gvDelete.DataBind();
 
+            string sCon = @"Data Source = (LocalDB)\MSSQLLocalDB; AttachDbFilename = |DataDirectory|\Database.mdf; Integrated Security = True";
+            // connection string  
+            SqlConnection con = new SqlConnection(sCon);
+            con.Open();
+
+            SqlCommand com = new SqlCommand("SELECT AlbumName FROM [Albums]", con);
+            // table name   
+            SqlDataAdapter da = new SqlDataAdapter(com);
+            DataSet ds = new DataSet();
+            da.Fill(ds);  // fill dataset  
+            ddAlbum.DataTextField = ds.Tables[0].Columns["AlbumName"].ToString(); // text field name of table dispalyed in dropdown       
+            ddAlbum.DataValueField = ds.Tables[0].Columns["AlbumName"].ToString();
+            // to retrive specific  textfield name   
+            ddAlbum.DataSource = ds.Tables[0];      //assigning datasource to the dropdownlist  
+            ddAlbum.DataBind();  //binding dropdownlist
         }
 
         protected void lbBack_Click(object sender, EventArgs e)
@@ -58,12 +73,22 @@ namespace WebSite_2
                     string imageId = cmdimage.ExecuteScalar().ToString();
                     cmdimage.Connection.Close();
 
+                    SqlCommand cmdAlbum = new SqlCommand("SELECT Id FROM [Albums] WHERE AlbumName = '" + ddAlbum.SelectedValue + "';", new SqlConnection(@"Data Source = (LocalDB)\MSSQLLocalDB; AttachDbFilename = |DataDirectory|\Database.mdf; Integrated Security = True"));
+                    cmdAlbum.Connection.Open();
+                    string AlbumId = cmdAlbum.ExecuteScalar().ToString();
+                    cmdimage.Connection.Close();
+
                     SqlCommand cmdAccess = new SqlCommand();
                     cmdAccess.CommandType = CommandType.Text;
                     cmdAccess.CommandText = "INSERT [Access] (UserId, ImageId) VALUES ('" + Session["Id"].ToString() + "', '" + imageId + "')";
                     cmdAccess.Connection = sqlCon;
 
-                    
+                    SqlCommand cmdAlbumImage = new SqlCommand();
+                    cmdAlbumImage.CommandType = CommandType.Text;
+                    cmdAlbumImage.CommandText = "INSERT [AlbumImages] (AlbumId, ImageId) VALUES ('" + AlbumId + "', '" + imageId + "')";
+                    cmdAlbumImage.Connection = sqlCon;
+
+                    cmdAlbumImage.ExecuteNonQuery();
                     cmdAccess.ExecuteNonQuery();
                     sqlCon.Close();
 

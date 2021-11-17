@@ -46,27 +46,37 @@ namespace WebSite_2
 
         protected void btnSearch_Click(object sender, EventArgs e)
         {
+
+
             if (txtId.Text != "")
             {
                 SqlCommand cmd = new SqlCommand("SELECT Question FROM [User] WHERE UserId = '" + txtId.Text + "'", new SqlConnection(constr));
                 cmd.Connection.Open();
-                lblOutput.Text = "Security Question = " + cmd.ExecuteScalar().ToString();
 
-                if (lblOutput.Text != "")
+                SqlDataReader datareader = cmd.ExecuteReader();
+                datareader.Read();
+
+                if (datareader.HasRows)
                 {
-                    txtPassword.Visible = true;
-                    txtConfirmPassword.Visible = true;
-                    txtAnswer.Visible = true;
-                    Label3.Visible = true;
-                    Label4.Visible = true;
-                    Label5.Visible = true;
-                    btnChange.Visible = true;
+                    lblOutput.Text = "Security Question = " + datareader[0].ToString();
+                    cmd.Connection.Close();
+
+                    if (lblOutput.Text != "")
+                    {
+                        txtPassword.Visible = true;
+                        txtConfirmPassword.Visible = true;
+                        txtAnswer.Visible = true;
+                        Label3.Visible = true;
+                        Label4.Visible = true;
+                        Label5.Visible = true;
+                        btnChange.Visible = true;
+                    }
+                    cmd.Connection.Close();
                 }
-                cmd.Connection.Close();
-            }
-            else
-            {
-                lblOutput.Text = "Insert a value at Id!";
+                else
+                {
+                    lblOutput.Text = "No data found!";
+                }
             }
         }
 

@@ -36,6 +36,14 @@
             </asp:DropDownList>
             <br />
             <br />
+            <asp:Label ID="Label5" runat="server" Text="Album"></asp:Label>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <asp:DropDownList ID="ddAlbum" runat="server">
+            </asp:DropDownList>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <br />
+&nbsp;&nbsp;&nbsp;&nbsp;
+            <br />
             <asp:Label ID="lblMessage" runat="server"></asp:Label>
             <br />
             <asp:Button ID="btnUpload" runat="server" Text="Upload Image and Data" OnClick="btnUpload_Click" />
@@ -58,5 +66,7 @@
         <p>
             &nbsp;</p>
     </form>
+    <p>
+        &nbsp;</p>
 </body>
 </html>
