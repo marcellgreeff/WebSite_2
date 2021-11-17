@@ -30,13 +30,11 @@
             <br />
             <asp:Button ID="btnSearchBy" runat="server" Text="Search" OnClick="btnSearchBy_Click" />
             &nbsp;&nbsp;&nbsp;
-            <asp:DropDownList ID="ddImages" runat="server" OnTextChanged="ddImages_TextChanged">
+            <asp:DropDownList ID="ddImages" runat="server">
             </asp:DropDownList>
             &nbsp;
             <br />
 &nbsp;
-            <asp:Image ID="imgOutput" runat="server" Height="109px" Width="155px" />
-            <br />
             <br />
             <asp:Label ID="Label3" runat="server" Text="If you would like to share/unshare this image, please select the Id of the person to share/unshare with and click share."></asp:Label>
             <br />

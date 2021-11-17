@@ -19,7 +19,6 @@ namespace WebSite_2
         public string imageId;
         protected void Page_Load(object sender, EventArgs e)
         {
-
             txtSearchBy.Attributes.Add("autocomplete", "off");
 
             string sCon = @"Data Source = (LocalDB)\MSSQLLocalDB; AttachDbFilename = |DataDirectory|\Database.mdf; Integrated Security = True";
@@ -42,7 +41,6 @@ namespace WebSite_2
 
             Label3.Visible = false;
             btnShare.Visible = false;
-            imgOutput.Visible = false;
             ddShare.Visible = false;
             ddImages.Visible = false;
             lblOutput.Text = "";
@@ -85,7 +83,6 @@ namespace WebSite_2
                 ddImages.Visible = true;
                 Label3.Visible = true;
                 btnShare.Visible = true;
-                imgOutput.Visible = true;
                 ddShare.Visible = true;
                 btnUnshare.Visible = true;
             }
@@ -129,11 +126,6 @@ namespace WebSite_2
                 lblOutput.Text = "Image has been Unshared!";
                 txtSearchBy.Text = "";
             }
-        }
-
-        protected void ddImages_TextChanged(object sender, EventArgs e)
-        {
-            imgOutput.ImageUrl = @"C:/Users/marce/source/repos/WebSite_2/App_Data/ImageData/" + ddImages.SelectedValue;
         }
     }
 }
