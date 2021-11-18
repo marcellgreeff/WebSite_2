@@ -47,53 +47,61 @@ namespace WebSite_2
         protected void btnSearch_Click(object sender, EventArgs e)
         {
 
-
-            if (txtId.Text != "")
+            try
             {
-                SqlCommand cmd = new SqlCommand("SELECT Question FROM [User] WHERE UserId = '" + txtId.Text + "'", new SqlConnection(constr));
-                cmd.Connection.Open();
-
-                SqlDataReader datareader = cmd.ExecuteReader();
-                datareader.Read();
-
-                if (datareader.HasRows)
+                if (txtId.Text != "")
                 {
-                    lblOutput.Text = "Security Question = " + datareader[0].ToString();
-                    cmd.Connection.Close();
+                    SqlCommand cmd = new SqlCommand("SELECT Question FROM [User] WHERE UserId = '" + txtId.Text + "'", new SqlConnection(constr));
+                    cmd.Connection.Open();
 
-                    if (lblOutput.Text != "")
+                    SqlDataReader datareader = cmd.ExecuteReader();
+                    datareader.Read();
+
+                    if (datareader.HasRows)
                     {
-                        txtPassword.Visible = true;
-                        txtConfirmPassword.Visible = true;
-                        txtAnswer.Visible = true;
-                        Label3.Visible = true;
-                        Label4.Visible = true;
-                        Label5.Visible = true;
-                        btnChange.Visible = true;
+                        lblOutput.Text = "Security Question = " + datareader[0].ToString();
+                        cmd.Connection.Close();
+
+                        if (lblOutput.Text != "")
+                        {
+                            txtPassword.Visible = true;
+                            txtConfirmPassword.Visible = true;
+                            txtAnswer.Visible = true;
+                            Label3.Visible = true;
+                            Label4.Visible = true;
+                            Label5.Visible = true;
+                            btnChange.Visible = true;
+                        }
+                        cmd.Connection.Close();
                     }
-                    cmd.Connection.Close();
+                    else
+                    {
+                        lblOutput.Text = "No data found!";
+                    }
                 }
-                else
-                {
-                    lblOutput.Text = "No data found!";
-                }
+            }
+            catch (SqlException ex)
+            {
+                lblOutput.Text = ("Something Went Wrong. Please restart!");
             }
         }
 
         protected void btnChange_Click(object sender, EventArgs e)
         {
-            SqlCommand cmd = new SqlCommand("SELECT Answer FROM [User] WHERE UserId = '" + txtId.Text + "'", new SqlConnection(constr));
-            cmd.Connection.Open();
-            if(txtAnswer.Text == cmd.ExecuteScalar().ToString())
+            try
             {
-                cmd.Connection.Close();
-                if (txtPassword.Text == txtConfirmPassword.Text)
+                SqlCommand cmd = new SqlCommand("SELECT Answer FROM [User] WHERE UserId = '" + txtId.Text + "'", new SqlConnection(constr));
+                cmd.Connection.Open();
+                if (txtAnswer.Text == cmd.ExecuteScalar().ToString())
                 {
+                    cmd.Connection.Close();
+                    if (txtPassword.Text == txtConfirmPassword.Text)
+                    {
 
-                    string pwd = txtPassword.Text;
-                    string salt = Register.GenerateSalt(70);
-                    string pwdHashed = Register.HashPassword(pwd, salt, 10101, 70);
-                    using (SqlConnection conn = new SqlConnection(constr))
+                        string pwd = txtPassword.Text;
+                        string salt = Register.GenerateSalt(70);
+                        string pwdHashed = Register.HashPassword(pwd, salt, 10101, 70);
+                        using (SqlConnection conn = new SqlConnection(constr))
                         {
                             conn.Open();
                             using (SqlCommand cmd1 = new SqlCommand("UPDATE [User] SET Password = '" + pwdHashed + "' WHERE UserId = '" + txtId.Text + "'", conn))
@@ -112,10 +120,15 @@ namespace WebSite_2
                                 Label4.Visible = false;
                                 Label5.Visible = false;
                                 btnChange.Visible = false;
+                            }
+                            conn.Close();
                         }
-                        conn.Close();
-                        }
+                    }
                 }
+            }
+            catch (SqlException ex)
+            {
+                lblOutput.Text = ("Something Went Wrong. Please restart!");
             }
         }
 

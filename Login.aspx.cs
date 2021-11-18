@@ -29,32 +29,41 @@ namespace WebSite_2
 
         protected void btnLogin_Click(object sender, EventArgs e)
         {
-
-            con.Open();
-            string pwd = txtPassword.Text;
-            string salt = Register.GenerateSalt(70);
-            string pwdHashed = Register.HashPassword(pwd, salt, 10101, 70);
-            string password = Hascode(txtPassword.Text);
-            Session["Id"] = txtId.Text;
-
-            string sql = @"SELECT UserId, Password FROM [User] WHERE UserId = @UserId";
-            SqlCommand command = new SqlCommand(sql, con);
-            command.Parameters.AddWithValue("@UserId", txtId.Text);
-            SqlDataReader datareader = command.ExecuteReader();
-            datareader.Read();
-            if (txtId.Text != "" && txtPassword.Text != "")
+            try
             {
-                if (datareader.HasRows)
+                con.Open();
+                string pwd = txtPassword.Text;
+                string salt = Register.GenerateSalt(70);
+                string pwdHashed = Register.HashPassword(pwd, salt, 10101, 70);
+                string password = Hascode(txtPassword.Text);
+                Session["Id"] = txtId.Text;
+
+                string sql = @"SELECT UserId, Password FROM [User] WHERE UserId = @UserId";
+                SqlCommand command = new SqlCommand(sql, con);
+                command.Parameters.AddWithValue("@UserId", txtId.Text);
+                SqlDataReader datareader = command.ExecuteReader();
+                datareader.Read();
+                if (txtId.Text != "" && txtPassword.Text != "")
                 {
-                    if (datareader["UserId"].ToString() == txtId.Text && datareader["Password"].ToString() == password)
+                    if (datareader.HasRows)
                     {
-                        txtId.Text = "";
-                        txtPassword.Text = "";
-                        Response.Redirect("Homepage.aspx");
+                        if (datareader["UserId"].ToString() == txtId.Text && datareader["Password"].ToString() == password)
+                        {
+                            txtId.Text = "";
+                            txtPassword.Text = "";
+                            Response.Redirect("Homepage.aspx");
+                        }
+                        else
+                        {
+                            lblMessage.Text = "Username and Password does not match. Please retry!";
+                            txtId.Text = "";
+                            txtPassword.Text = "";
+                            txtId.Focus();
+                        }
                     }
                     else
                     {
-                        lblMessage.Text = "Username and Password does not match. Please retry!";
+                        lblMessage.Text = "Username does not exist. Please retry!";
                         txtId.Text = "";
                         txtPassword.Text = "";
                         txtId.Focus();
@@ -62,19 +71,16 @@ namespace WebSite_2
                 }
                 else
                 {
-                    lblMessage.Text = "Username does not exist. Please retry!";
-                    txtId.Text = "";
-                    txtPassword.Text = "";
+                    lblMessage.Text = "Please enter a username AND password!";
                     txtId.Focus();
                 }
+                con.Close();
+                datareader.Close();
             }
-            else
+            catch (SqlException ex)
             {
-                lblMessage.Text = "Please enter a username AND password!";
-                txtId.Focus();
+                lblMessage.Text = ("Something Went Wrong. Please restart!");
             }
-            con.Close();
-            datareader.Close();
         }
 
         protected void btnRegister_Click(object sender, EventArgs e)

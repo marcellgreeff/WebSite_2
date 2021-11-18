@@ -21,33 +21,35 @@ namespace WebSite_2
         }
 
         protected void Button1_Click(object sender, EventArgs e)
-        { 
-            if (txtId.Text != "" && txtPassword.Text != "" && txtAnswer.Text != "")
+        {
+            try
             {
-                    if (ddlQuestion.SelectedIndex > -1)                                        
-                        {
-                     
-                    string pwd = txtPassword.Text;
-                    string salt = Register.GenerateSalt(70);
-                    string pwdHashed = Register.HashPassword(pwd, salt, 10101, 70);
-                    string password = Hascode(txtPassword.Text);
+                if (txtId.Text != "" && txtPassword.Text != "" && txtAnswer.Text != "")
+                {
+                    if (ddlQuestion.SelectedIndex > -1)
+                    {
 
-                    System.Data.SqlClient.SqlConnection sqlCon = new System.Data.SqlClient.SqlConnection(@"Data Source = (LocalDB)\MSSQLLocalDB; AttachDbFilename = |DataDirectory|\Database.mdf; Integrated Security = True");
-                    System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand();
-                    cmd.CommandType = System.Data.CommandType.Text;
-                    cmd.CommandText = "INSERT [User] (UserId, Password, Question, Answer) VALUES ('" + txtId.Text + "', '" + password + "', '" + ddlQuestion.SelectedItem + "', '" + txtAnswer.Text + "')";
-                    cmd.Connection = sqlCon;
+                        string pwd = txtPassword.Text;
+                        string salt = Register.GenerateSalt(70);
+                        string pwdHashed = Register.HashPassword(pwd, salt, 10101, 70);
+                        string password = Hascode(txtPassword.Text);
 
-                     sqlCon.Open();
-                     cmd.ExecuteNonQuery();
-                     sqlCon.Close();
+                        System.Data.SqlClient.SqlConnection sqlCon = new System.Data.SqlClient.SqlConnection(@"Data Source = (LocalDB)\MSSQLLocalDB; AttachDbFilename = |DataDirectory|\Database.mdf; Integrated Security = True");
+                        System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand();
+                        cmd.CommandType = System.Data.CommandType.Text;
+                        cmd.CommandText = "INSERT [User] (UserId, Password, Question, Answer) VALUES ('" + txtId.Text + "', '" + password + "', '" + ddlQuestion.SelectedItem + "', '" + txtAnswer.Text + "')";
+                        cmd.Connection = sqlCon;
 
-                    lblRegister.Text = "User Registered!";
-                            txtAnswer.Text = "";
-                            txtId.Text = "";
-                            txtPassword.Text = "";
-                            ddlQuestion.SelectedValue.FirstOrDefault();
-                        }
+                        sqlCon.Open();
+                        cmd.ExecuteNonQuery();
+                        sqlCon.Close();
+
+                        lblRegister.Text = "User Registered!";
+                        txtAnswer.Text = "";
+                        txtId.Text = "";
+                        txtPassword.Text = "";
+                        ddlQuestion.SelectedValue.FirstOrDefault();
+                    }
                     else
                     {
                         lblRegister.Text = "Please select a value in die drop down list";
@@ -58,6 +60,12 @@ namespace WebSite_2
                     lblRegister.Text = "Please insert a value at all boxes!";
                 }
             }
+            catch (SqlException ex)
+            {
+                lblRegister.Text = ("Something Went Wrong. Please restart!");
+            }
+        }
+
     
 
         protected void lbBack_Click(object sender, EventArgs e)

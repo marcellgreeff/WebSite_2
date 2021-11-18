@@ -47,75 +47,101 @@ namespace WebSite_2
 
         protected void btnAddAlbum_Click(object sender, EventArgs e)
         {
-            System.Data.SqlClient.SqlConnection sqlCon = new System.Data.SqlClient.SqlConnection(@"Data Source = (LocalDB)\MSSQLLocalDB; AttachDbFilename = |DataDirectory|\Database.mdf; Integrated Security = True");
-            System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand();
-            cmd.CommandType = System.Data.CommandType.Text;
-            cmd.CommandText = "INSERT [Albums] (AlbumName) VALUES ('" + txtAlbumName.Text + "')";
-            cmd.Connection = sqlCon;
-            sqlCon.Open();
-            cmd.ExecuteNonQuery();
-            sqlCon.Close();
-            lblOutput.Text = "Album created!";
-        }
-
-        protected void btnDelete_Click(object sender, EventArgs e)
-        {
-
-            SqlCommand cmdAlbum = new SqlCommand("SELECT Id FROM [Albums] WHERE AlbumName = '" + ddAlbums.SelectedValue + "';", new SqlConnection(@"Data Source = (LocalDB)\MSSQLLocalDB; AttachDbFilename = |DataDirectory|\Database.mdf; Integrated Security = True"));
-            cmdAlbum.Connection.Open();
-            string albumId = cmdAlbum.ExecuteScalar().ToString();
-            cmdAlbum.Connection.Close();
-            System.Data.SqlClient.SqlConnection sqlCon = new System.Data.SqlClient.SqlConnection(@"Data Source = (LocalDB)\MSSQLLocalDB; AttachDbFilename = |DataDirectory|\Database.mdf; Integrated Security = True");
-            System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand();
-            cmd.CommandType = System.Data.CommandType.Text;
-            cmd.CommandText = "DELETE FROM [Albums] WHERE AlbumName ='" + ddAlbums.SelectedValue + "'";
-            cmd.Connection = sqlCon;
-
-            System.Data.SqlClient.SqlCommand cmdAccess = new System.Data.SqlClient.SqlCommand();
-            cmdAccess.CommandType = System.Data.CommandType.Text;
-            cmdAccess.CommandText = "DELETE FROM [AlbumImages] WHERE AlbumId ='" + albumId + "'";
-            cmdAccess.Connection = sqlCon;
-
-            sqlCon.Open();
-            cmdAccess.ExecuteNonQuery();
-            cmd.ExecuteNonQuery();
-            sqlCon.Close();
-
-            lblOutput.Text = "Album and corresponding images deleted!";
-        }
-
-        protected void Button1_Click(object sender, EventArgs e)
-        {
-            if (txtNewAlbumName.Text != "")
+            try
             {
                 System.Data.SqlClient.SqlConnection sqlCon = new System.Data.SqlClient.SqlConnection(@"Data Source = (LocalDB)\MSSQLLocalDB; AttachDbFilename = |DataDirectory|\Database.mdf; Integrated Security = True");
                 System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand();
                 cmd.CommandType = System.Data.CommandType.Text;
-                cmd.CommandText = "Update [Albums] SET AlbumName ='" + txtNewAlbumName.Text + "'";
+                cmd.CommandText = "INSERT [Albums] (AlbumName) VALUES ('" + txtAlbumName.Text + "')";
                 cmd.Connection = sqlCon;
                 sqlCon.Open();
                 cmd.ExecuteNonQuery();
                 sqlCon.Close();
-                lblOutput.Text = "Album updated!";
+                lblOutput.Text = "Album created!";
+            }
+            catch (SqlException ex)
+            {
+                lblOutput.Text = ("Something Went Wrong. Please restart!");
+            }
+        }
+
+        protected void btnDelete_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                SqlCommand cmdAlbum = new SqlCommand("SELECT Id FROM [Albums] WHERE AlbumName = '" + ddAlbums.SelectedValue + "';", new SqlConnection(@"Data Source = (LocalDB)\MSSQLLocalDB; AttachDbFilename = |DataDirectory|\Database.mdf; Integrated Security = True"));
+                cmdAlbum.Connection.Open();
+                string albumId = cmdAlbum.ExecuteScalar().ToString();
+                cmdAlbum.Connection.Close();
+                System.Data.SqlClient.SqlConnection sqlCon = new System.Data.SqlClient.SqlConnection(@"Data Source = (LocalDB)\MSSQLLocalDB; AttachDbFilename = |DataDirectory|\Database.mdf; Integrated Security = True");
+                System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand();
+                cmd.CommandType = System.Data.CommandType.Text;
+                cmd.CommandText = "DELETE FROM [Albums] WHERE AlbumName ='" + ddAlbums.SelectedValue + "'";
+                cmd.Connection = sqlCon;
+
+                System.Data.SqlClient.SqlCommand cmdAccess = new System.Data.SqlClient.SqlCommand();
+                cmdAccess.CommandType = System.Data.CommandType.Text;
+                cmdAccess.CommandText = "DELETE FROM [AlbumImages] WHERE AlbumId ='" + albumId + "'";
+                cmdAccess.Connection = sqlCon;
+
+                sqlCon.Open();
+                cmdAccess.ExecuteNonQuery();
+                cmd.ExecuteNonQuery();
+                sqlCon.Close();
+
+                lblOutput.Text = "Album and corresponding images deleted!";
+            }
+            catch (SqlException ex)
+            {
+                lblOutput.Text = ("Something Went Wrong. Please restart!");
+            }
+        }
+
+        protected void Button1_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (txtNewAlbumName.Text != "")
+                {
+                    System.Data.SqlClient.SqlConnection sqlCon = new System.Data.SqlClient.SqlConnection(@"Data Source = (LocalDB)\MSSQLLocalDB; AttachDbFilename = |DataDirectory|\Database.mdf; Integrated Security = True");
+                    System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand();
+                    cmd.CommandType = System.Data.CommandType.Text;
+                    cmd.CommandText = "Update [Albums] SET AlbumName ='" + txtNewAlbumName.Text + "'";
+                    cmd.Connection = sqlCon;
+                    sqlCon.Open();
+                    cmd.ExecuteNonQuery();
+                    sqlCon.Close();
+                    lblOutput.Text = "Album updated!";
+                }
+            }
+            catch (SqlException ex)
+            {
+                lblOutput.Text = ("Something Went Wrong. Please restart!");
             }
         }
 
         protected void btnGiveAccess_Click(object sender, EventArgs e)
         {
-
-            SqlCommand cmdAlbum = new SqlCommand("SELECT Id FROM [Albums] WHERE AlbumName = '" + ddAlbums.SelectedValue + "';", new SqlConnection(@"Data Source = (LocalDB)\MSSQLLocalDB; AttachDbFilename = |DataDirectory|\Database.mdf; Integrated Security = True"));
-            cmdAlbum.Connection.Open();
-            string albumId = cmdAlbum.ExecuteScalar().ToString();
-            cmdAlbum.Connection.Close();
-            System.Data.SqlClient.SqlConnection sqlCon = new System.Data.SqlClient.SqlConnection(@"Data Source = (LocalDB)\MSSQLLocalDB; AttachDbFilename = |DataDirectory|\Database.mdf; Integrated Security = True");
-            System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand();
-            cmd.CommandType = System.Data.CommandType.Text;
-            cmd.CommandText = "INSERT [AlbumAccess] (AlbumId, UserId) VALUES ('" + albumId + "', '" + txtUserId.Text + "')";
-            cmd.Connection = sqlCon;
-            sqlCon.Open();
-            cmd.ExecuteNonQuery();
-            sqlCon.Close();
-            lblOutput.Text = "User access created!";
+            try
+            {
+                SqlCommand cmdAlbum = new SqlCommand("SELECT Id FROM [Albums] WHERE AlbumName = '" + ddAlbums.SelectedValue + "';", new SqlConnection(@"Data Source = (LocalDB)\MSSQLLocalDB; AttachDbFilename = |DataDirectory|\Database.mdf; Integrated Security = True"));
+                cmdAlbum.Connection.Open();
+                string albumId = cmdAlbum.ExecuteScalar().ToString();
+                cmdAlbum.Connection.Close();
+                System.Data.SqlClient.SqlConnection sqlCon = new System.Data.SqlClient.SqlConnection(@"Data Source = (LocalDB)\MSSQLLocalDB; AttachDbFilename = |DataDirectory|\Database.mdf; Integrated Security = True");
+                System.Data.SqlClient.SqlCommand cmd = new System.Data.SqlClient.SqlCommand();
+                cmd.CommandType = System.Data.CommandType.Text;
+                cmd.CommandText = "INSERT [AlbumAccess] (AlbumId, UserId) VALUES ('" + albumId + "', '" + txtUserId.Text + "')";
+                cmd.Connection = sqlCon;
+                sqlCon.Open();
+                cmd.ExecuteNonQuery();
+                sqlCon.Close();
+                lblOutput.Text = "User access created!";
+            }
+            catch (SqlException ex)
+            {
+                lblOutput.Text = ("Something Went Wrong. Please restart!");
+            }
         }
     }
 }
