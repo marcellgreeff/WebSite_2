@@ -11,7 +11,7 @@
         <div>
             <asp:LinkButton ID="lbBack" runat="server" OnClick="lbBack_Click">Back</asp:LinkButton>
             <br />
-            <asp:Label ID="Label1" runat="server" Text="Search/Share"></asp:Label>
+            <asp:Label ID="Label1" runat="server" Text="Search/Share" Font-Size="Larger"></asp:Label>
             <br />
             <br />
             <asp:Label ID="Label2" runat="server" Text="Search photo by:"></asp:Label>

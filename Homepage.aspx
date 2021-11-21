@@ -8,6 +8,9 @@
 </head>
 <body>
     <form id="form1" runat="server">
+        <asp:Label ID="Label1" runat="server" Font-Size="Larger" Text="Home"></asp:Label>
+        <br />
+        <br />
         <asp:Menu ID="Menu1" runat="server">
             <Items>
                 <asp:MenuItem NavigateUrl="~/Changes.aspx" Text="Upload/Download" Value="Upload/Download"></asp:MenuItem>

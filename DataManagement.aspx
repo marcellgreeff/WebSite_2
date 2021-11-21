@@ -11,6 +11,8 @@
         <div>
             <asp:LinkButton ID="lbBack" runat="server" OnClick="lbBack_Click">Back</asp:LinkButton>
             <br />
+            <asp:Label ID="Label5" runat="server" Font-Size="Larger" Text="Data Management"></asp:Label>
+            <br />
             <br />
             <asp:Label ID="Label1" runat="server" Text="Search image to update data."></asp:Label>
             <br />

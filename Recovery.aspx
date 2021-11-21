@@ -11,7 +11,7 @@
         <div>
             <asp:LinkButton ID="lbBack" runat="server" OnClick="lbBack_Click">Back</asp:LinkButton>
             <br />
-            <asp:Label ID="Label1" runat="server" Text="Password Recovery"></asp:Label>
+            <asp:Label ID="Label1" runat="server" Text="Password Recovery" Font-Size="Larger"></asp:Label>
             <br />
             <br />
             <asp:Label ID="Label2" runat="server" Text="Id"></asp:Label>

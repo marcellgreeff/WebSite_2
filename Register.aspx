@@ -11,7 +11,7 @@
         <div>
             <asp:LinkButton ID="lbBack" runat="server" OnClick="lbBack_Click">Back</asp:LinkButton>
             <br />
-            <asp:Label ID="Label1" runat="server" Text="Register"></asp:Label>
+            <asp:Label ID="Label1" runat="server" Text="Register" Font-Size="Larger"></asp:Label>
             <br />
             <br />
             <asp:Label ID="Label2" runat="server" Text="Id"></asp:Label>

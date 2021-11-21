@@ -16,6 +16,8 @@ namespace WebSite_2
         {
             txtAlbumName.Attributes.Add("autocomplete", "off");
             txtNewAlbumName.Attributes.Add("autocomplete", "off");
+            txtUserId.Attributes.Add("autocomplete", "off");
+
 
             string sCon = @"Data Source = (LocalDB)\MSSQLLocalDB; AttachDbFilename = |DataDirectory|\Database.mdf; Integrated Security = True";
             // connection string  
