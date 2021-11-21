@@ -56,9 +56,23 @@ namespace WebSite_2
                 cmd.CommandType = System.Data.CommandType.Text;
                 cmd.CommandText = "INSERT [Albums] (AlbumName) VALUES ('" + txtAlbumName.Text + "')";
                 cmd.Connection = sqlCon;
+                
                 sqlCon.Open();
                 cmd.ExecuteNonQuery();
                 sqlCon.Close();
+                SqlCommand cmdAlbum = new SqlCommand("SELECT Id FROM [Albums] WHERE AlbumName = '" + txtAlbumName.Text + "';", new SqlConnection(@"Data Source = (LocalDB)\MSSQLLocalDB; AttachDbFilename = |DataDirectory|\Database.mdf; Integrated Security = True"));
+                cmdAlbum.Connection.Open();
+                string albumId = cmdAlbum.ExecuteScalar().ToString();
+                cmdAlbum.Connection.Close();
+
+                System.Data.SqlClient.SqlCommand cmdAccess = new System.Data.SqlClient.SqlCommand();
+                cmdAccess.CommandType = System.Data.CommandType.Text;
+                cmdAccess.CommandText = "INSERT [AlbumAccess] (AlbumId, UserId) VALUES ('" + albumId + "', '" + Session["Id"].ToString() + "')";
+                cmdAccess.Connection = sqlCon;
+                sqlCon.Open();
+                cmdAccess.ExecuteNonQuery();
+                sqlCon.Close();
+
                 lblOutput.Text = "Album created!";
             }
             catch (SqlException ex)
