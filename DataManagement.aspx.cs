@@ -25,13 +25,28 @@ namespace WebSite_2
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            string sCon = @"Data Source = (LocalDB)\MSSQLLocalDB; AttachDbFilename = |DataDirectory|\Database.mdf; Integrated Security = True";
+            // connection string  
+            SqlConnection con = new SqlConnection(sCon);
+            con.Open();
+
+            SqlCommand com = new SqlCommand("SELECT Image.Id FROM [Image] INNER JOIN [Access] on Access.ImageId = Image.Id WHERE Access.UserId = '" + Session["Id"] + "'", con);
+            // table name   
+            SqlDataAdapter da = new SqlDataAdapter(com);
+            DataSet ds = new DataSet();
+            da.Fill(ds);  // fill dataset  
+            ddShare.DataTextField = ds.Tables[0].Columns["Id"].ToString(); // text field name of table dispalyed in dropdown       
+            ddShare.DataValueField = ds.Tables[0].Columns["Id"].ToString();
+            // to retrive specific  textfield name   
+            ddShare.DataSource = ds.Tables[0];      //assigning datasource to the dropdownlist  
+            ddShare.DataBind();  //binding dropdownlist
+
             Label3.Visible = false;
             Label4.Visible = false;
             txtLocation.Visible = false;
             txtType.Visible = false;
             btnDelete.Visible = false;
             btnUpdate.Visible = false;
-            txtImageId.Attributes.Add("autocomplete", "off");
             txtLocation.Attributes.Add("autocomplete", "off");
             txtType.Attributes.Add("autocomplete", "off");
         }
@@ -45,12 +60,12 @@ namespace WebSite_2
         {
             try
             {
-                if (txtImageId.Text != "")
+                if (ddShare.SelectedIndex > -1)
                 {
-                    SqlCommand cmd = new SqlCommand("SELECT Image.Id FROM [Image] INNER JOIN [Access] on Access.ImageId = Image.Id WHERE Image.Id = '" + txtImageId.Text + "' AND Access.UserId = '" + Session["Id"] + "'", new SqlConnection(constr));
+                    SqlCommand cmd = new SqlCommand("SELECT Image.Id FROM [Image] INNER JOIN [Access] on Access.ImageId = Image.Id WHERE Image.Id = '" + ddShare.SelectedValue + "' AND Access.UserId = '" + Session["Id"] + "'", new SqlConnection(constr));
                     cmd.Connection.Open();
                     password = cmd.ExecuteScalar().ToString();
-                    if (password != "" && txtImageId.Text != "")
+                    if (password != "" && ddShare.SelectedIndex >-1)
                     {
                         lblOutput.Text = "Data found! Choose to update or delete data!";
 
@@ -64,7 +79,6 @@ namespace WebSite_2
                     else
                     {
                         lblOutput.Text = "No such Data found! Please retry!";
-                        txtImageId.Text = "";
                     }
 
                 }
@@ -79,21 +93,20 @@ namespace WebSite_2
         {
             try
             {
-                SqlCommand cmd = new SqlCommand("SELECT Id FROM [Image] WHERE Id = '" + txtImageId.Text + "'", new SqlConnection(constr));
+                SqlCommand cmd = new SqlCommand("SELECT Id FROM [Image] WHERE Id = '" + ddShare.SelectedValue + "'", new SqlConnection(constr));
                 cmd.Connection.Open();
-                if (txtImageId.Text == cmd.ExecuteScalar().ToString())
+                if (ddShare.SelectedValue == cmd.ExecuteScalar().ToString())
                 {
                     cmd.Connection.Close();
                     using (SqlConnection conn = new SqlConnection(constr))
                     {
                         conn.Open();
-                        using (SqlCommand cmd1 = new SqlCommand("UPDATE [Image] SET Location = '" + txtLocation.Text + "', Type = '" + txtType.Text + "' WHERE Id = '" + txtImageId.Text + "'", conn))
+                        using (SqlCommand cmd1 = new SqlCommand("UPDATE [Image] SET Location = '" + txtLocation.Text + "', Type = '" + txtType.Text + "' WHERE Id = '" + ddShare.SelectedValue + "'", conn))
                         {
                             cmd1.Parameters.AddWithValue("@Location", txtLocation.Text.ToString());
                             cmd1.Parameters.AddWithValue("@Type", txtType.Text.ToString());
                             int rows = cmd1.ExecuteNonQuery();
                             lblOutput.Text = "Data has been updated successfully!";
-                            txtImageId.Text = "";
                             txtLocation.Text = "";
                             txtType.Text = "";
                             Label3.Visible = false;
@@ -117,9 +130,9 @@ namespace WebSite_2
         {
             try
             {
-                SqlCommand cmdAccess = new SqlCommand("DELETE FROM [Access] WHERE ImageId = '" + txtImageId.Text + "'", new SqlConnection(constr));
-                SqlCommand cmdName = new SqlCommand("SELECT Name FROM [Image] WHERE Id = '" + txtImageId.Text + "'", new SqlConnection(constr));
-                SqlCommand cmd = new SqlCommand("DELETE FROM [Image] WHERE Id = '" + txtImageId.Text + "'", new SqlConnection(constr));
+                SqlCommand cmdAccess = new SqlCommand("DELETE FROM [Access] WHERE ImageId = '" + ddShare.SelectedValue + "'", new SqlConnection(constr));
+                SqlCommand cmdName = new SqlCommand("SELECT Name FROM [Image] WHERE Id = '" + ddShare.SelectedValue + "'", new SqlConnection(constr));
+                SqlCommand cmd = new SqlCommand("DELETE FROM [Image] WHERE Id = '" + ddShare.SelectedValue + "'", new SqlConnection(constr));
                 cmdName.Connection.Open();
                 cmdName.ExecuteNonQuery();
                 authorsFile = cmdName.ExecuteScalar().ToString();
@@ -136,7 +149,6 @@ namespace WebSite_2
                     File.Delete(Path.Combine(rootFolder, authorsFile));
                 }
                 lblOutput.Text = "Data has been updated successfully!";
-                txtImageId.Text = "";
                 txtLocation.Text = "";
                 txtType.Text = "";
                 Label3.Visible = false;

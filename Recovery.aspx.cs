@@ -8,6 +8,7 @@ using System.Data;
 using System.Data.Sql;
 using System.Data.SqlClient;
 using System.Security.Cryptography;
+using System.Text;
 
 namespace WebSite_2
 {
@@ -101,10 +102,11 @@ namespace WebSite_2
                         string pwd = txtPassword.Text;
                         string salt = Register.GenerateSalt(70);
                         string pwdHashed = Register.HashPassword(pwd, salt, 10101, 70);
+                        string password = Hascode(txtPassword.Text);
                         using (SqlConnection conn = new SqlConnection(constr))
                         {
                             conn.Open();
-                            using (SqlCommand cmd1 = new SqlCommand("UPDATE [User] SET Password = '" + pwdHashed + "' WHERE UserId = '" + txtId.Text + "'", conn))
+                            using (SqlCommand cmd1 = new SqlCommand("UPDATE [User] SET Password = '" + password + "' WHERE UserId = '" + txtId.Text + "'", conn))
                             {
                                 cmd1.Parameters.AddWithValue("@Password", pwdHashed);
                                 int rows = cmd1.ExecuteNonQuery();
@@ -152,6 +154,14 @@ namespace WebSite_2
             {
                 return Convert.ToBase64String(rfc2898DeriveBytes.GetBytes(nHash));
             }
+        }
+
+        public static string Hascode(string value)
+        {
+            return Convert.ToBase64String(
+                System.Security.Cryptography.SHA256.Create()
+                .ComputeHash(Encoding.UTF8.GetBytes(value))
+                );
         }
     }
 }
